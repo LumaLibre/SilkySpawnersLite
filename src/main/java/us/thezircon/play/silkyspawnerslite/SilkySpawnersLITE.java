@@ -1,8 +1,6 @@
 package us.thezircon.play.silkyspawnerslite;
 
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +12,7 @@ import us.thezircon.play.silkyspawnerslite.commands.SilkySpawner.Silky;
 import us.thezircon.play.silkyspawnerslite.events.breakSpawner;
 import us.thezircon.play.silkyspawnerslite.events.placeSpawner;
 import us.thezircon.play.silkyspawnerslite.events.playerJoin;
-import us.thezircon.play.silkyspawnerslite.events.renameSpawner;
+import us.thezircon.play.silkyspawnerslite.events.changeSpawner;
 import us.thezircon.play.silkyspawnerslite.nms.*;
 import us.thezircon.play.silkyspawnerslite.utils.HexFormat;
 import us.thezircon.play.silkyspawnerslite.utils.Metrics;
@@ -67,7 +65,7 @@ public final class SilkySpawnersLITE extends JavaPlugin {
         //Events & Listeners
         getServer().getPluginManager().registerEvents(new breakSpawner(), this);
         getServer().getPluginManager().registerEvents(new placeSpawner(), this);
-        getServer().getPluginManager().registerEvents(new renameSpawner(), this);
+        getServer().getPluginManager().registerEvents(new changeSpawner(), this);
         getServer().getPluginManager().registerEvents(new playerJoin(), this);
 
         //bStats
@@ -94,8 +92,13 @@ public final class SilkySpawnersLITE extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-
+    // I do not feel like running buildTools or getting all these NMS versions somehow especially when I don't ever plan on downgrading my server.
+    // I'm running 1.20 so NMS is completely unnecessary and we can use this guy's persistentDataContainer usage instead.
     private void setNMSVersion() {
+        nms = new POST_1_17();
+        //nms = new NMS_1_18();
+        getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &aModified by Jsinco - Using API 1.17+ Always"));
+        /*
         String version = Bukkit.getServer().getClass().getPackage().getName();
         if (version.contains("1_15")) {
             nms = new NMS_1_15();
@@ -131,10 +134,9 @@ public final class SilkySpawnersLITE extends JavaPlugin {
             //nms = new NMS_1_18();
             getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.19 [POST 1.17]"));
         } else {
-            nms = new POST_1_17();
-            //nms = new NMS_1_18();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &4Unknown Version - Using API [POST 1.17]"));
+
         }
+         */
     }
 
     public static nmsHandler getNMS() {

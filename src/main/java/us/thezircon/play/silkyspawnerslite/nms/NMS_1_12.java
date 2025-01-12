@@ -1,5 +1,5 @@
 package us.thezircon.play.silkyspawnerslite.nms;
-
+/*
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.NBTTagString;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
@@ -43,3 +43,5 @@ public class NMS_1_12 implements nmsHandler {
         return nbtKey;
     }
 }
+
+ */
