@@ -50,17 +50,4 @@ public class changeSpawner implements Listener {
 
     }
 
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onSpawnerChangeAttempt(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-        if (item == null || !(item.getItemMeta() instanceof SpawnEggMeta)) {
-            return;
-        }
-        String msgPrefix = HexFormat.format(plugin.getLangConfig().getString("msgPrefix"));
-        player.sendMessage(msgPrefix + " You cannot change spawner types with spawn eggs.");
-        event.setCancelled(true);
-    }
-
 }
