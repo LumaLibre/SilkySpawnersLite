@@ -21,11 +21,14 @@ import us.thezircon.play.silkyspawnerslite.utils.HexFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import static us.thezircon.play.silkyspawnerslite.utils.SpawnerGiver.capitalizeWord;
 
-public class breakSpawner implements Listener{
+public class BreakSpawner implements Listener{
 
     SilkySpawnersLITE plugin = SilkySpawnersLITE.getPlugin(SilkySpawnersLITE.class);
 
@@ -157,7 +160,9 @@ public class breakSpawner implements Listener{
             return true;
         } else {
             playerBeenWarned.add(player.getUniqueId());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> playerBeenWarned.remove(player.getUniqueId()), 200L);
+            Bukkit.getGlobalRegionScheduler().runDelayed(plugin, (t) -> {
+                playerBeenWarned.remove(player.getUniqueId());
+            }, 200L);
             return false;
         }
     }

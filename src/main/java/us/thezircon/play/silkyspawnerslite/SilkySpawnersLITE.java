@@ -6,31 +6,23 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.silkyspawnerslite.commands.CheckSpawner;
 import us.thezircon.play.silkyspawnerslite.commands.SilkySpawner.Silky;
-import us.thezircon.play.silkyspawnerslite.events.breakSpawner;
-import us.thezircon.play.silkyspawnerslite.events.placeSpawner;
-import us.thezircon.play.silkyspawnerslite.events.playerJoin;
-import us.thezircon.play.silkyspawnerslite.events.changeSpawner;
-import us.thezircon.play.silkyspawnerslite.nms.*;
+import us.thezircon.play.silkyspawnerslite.events.BreakSpawner;
+import us.thezircon.play.silkyspawnerslite.events.PlaceSpawner;
+import us.thezircon.play.silkyspawnerslite.events.ChangeSpawner;
+import us.thezircon.play.silkyspawnerslite.nms.POST_1_17;
+import us.thezircon.play.silkyspawnerslite.nms.nmsHandler;
 import us.thezircon.play.silkyspawnerslite.utils.HexFormat;
-import us.thezircon.play.silkyspawnerslite.utils.Metrics;
 import us.thezircon.play.silkyspawnerslite.utils.UpdateConfigs;
-import us.thezircon.play.silkyspawnerslite.utils.VersionChk;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.logging.Logger;
 
 public final class SilkySpawnersLITE extends JavaPlugin {
 
     private static nmsHandler nms;
-    private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy econ = null;
-
-    public boolean UP2Date = true;
 
     @Override
     public void onEnable() {
@@ -45,7 +37,7 @@ public final class SilkySpawnersLITE extends JavaPlugin {
         UpdateConfigs.lang();
 
         //NMS Setup & Checks
-        setNMSVersion();
+        nms = new POST_1_17();
 
         //Check for vault
         if (!setupEconomy()) {
@@ -63,28 +55,11 @@ public final class SilkySpawnersLITE extends JavaPlugin {
         getCommand("checkspawner").setExecutor(new CheckSpawner());
 
         //Events & Listeners
-        getServer().getPluginManager().registerEvents(new breakSpawner(), this);
-        getServer().getPluginManager().registerEvents(new placeSpawner(), this);
-        getServer().getPluginManager().registerEvents(new changeSpawner(), this);
-        getServer().getPluginManager().registerEvents(new playerJoin(), this);
+        getServer().getPluginManager().registerEvents(new BreakSpawner(), this);
+        getServer().getPluginManager().registerEvents(new PlaceSpawner(), this);
+        getServer().getPluginManager().registerEvents(new ChangeSpawner(), this);
 
-        //bStats
-        Metrics metrics = new Metrics(this, 6579);
-
-        //Version Check
-        String pluginName = this.getName();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    VersionChk.checkVersion(pluginName, 76103);
-                } catch (UnknownHostException e) {
-                    VersionChk.noConnection();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.run();
+        // Note: removed metrics/version checker
     }
 
     @Override
@@ -92,52 +67,6 @@ public final class SilkySpawnersLITE extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    // I do not feel like running buildTools or getting all these NMS versions somehow especially when I don't ever plan on downgrading my server.
-    // I'm running 1.20 so NMS is completely unnecessary and we can use this guy's persistentDataContainer usage instead.
-    private void setNMSVersion() {
-        nms = new POST_1_17();
-        //nms = new NMS_1_18();
-        getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &aModified by Jsinco - Using API 1.17+ Always"));
-        /*
-        String version = Bukkit.getServer().getClass().getPackage().getName();
-        if (version.contains("1_15")) {
-            nms = new NMS_1_15();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.15"));
-        } else if (version.contains("1_14")) {
-            nms = new NMS_1_14();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.14"));
-        } else if (version.contains("1_13")) {
-            nms = new NMS_1_13();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.13"));
-        } else if (version.contains("1_12")) {
-            nms = new NMS_1_12();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.12"));
-        } else if (version.contains("1_16_R2")) {
-            nms = new NMS_1_16_R2();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.16.2/1.16.3"));
-        }  else if (version.contains("1_16_R3")) {
-             nms = new NMS_1_16_R3();
-             getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.16.4"));
-        } else if (version.contains("1_16")) {
-            nms = new NMS_1_16();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.16"));
-        } else if (version.contains("1_17")) {
-            //nms = new NMS_1_17();
-            nms = new POST_1_17();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.17 [POST 1.17]"));
-        } else if (version.contains("1_18")) {
-            nms = new POST_1_17();
-            //nms = new NMS_1_18();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.18 [POST 1.17]"));
-        } else if (version.contains("1_19")) {
-            nms = new POST_1_17();
-            //nms = new NMS_1_18();
-            getServer().getConsoleSender().sendMessage(HexFormat.format("&8[&bSilky&6Spawners&8] &7Loading &cNMS&7 version &e1.19 [POST 1.17]"));
-        } else {
-
-        }
-         */
-    }
 
     public static nmsHandler getNMS() {
         return nms;

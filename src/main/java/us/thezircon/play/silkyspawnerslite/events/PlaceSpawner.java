@@ -1,6 +1,5 @@
 package us.thezircon.play.silkyspawnerslite.events;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -11,10 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import us.thezircon.play.silkyspawnerslite.SilkySpawnersLITE;
 
-public class placeSpawner implements Listener{
+public class PlaceSpawner implements Listener{
 
     SilkySpawnersLITE plugin = SilkySpawnersLITE.getPlugin(SilkySpawnersLITE.class);
 

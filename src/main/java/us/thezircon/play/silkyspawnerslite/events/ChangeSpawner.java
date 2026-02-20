@@ -3,18 +3,15 @@ package us.thezircon.play.silkyspawnerslite.events;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 import us.thezircon.play.silkyspawnerslite.SilkySpawnersLITE;
 import us.thezircon.play.silkyspawnerslite.utils.HexFormat;
 
-public class changeSpawner implements Listener {
+public class ChangeSpawner implements Listener {
 
     SilkySpawnersLITE plugin = SilkySpawnersLITE.getPlugin(SilkySpawnersLITE.class);
 
